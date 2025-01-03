@@ -1,1 +1,133 @@
-wip
+.\"*************************************************************************
+.\"* man_1_simple_shell – manual page for a simple UNIX command interpreter
+.\"*************************************************************************
+.TH simple_shell 1 "January 2025" "1.0" "Simple Shell Manual"
+.SH NAME
+.B simple_shell
+\- A custom UNIX command interpreter
+
+.SH SYNOPSIS
+.B simple_shell
+[\fIfile\fR]
+
+.SH DESCRIPTION
+The
+.B simple_shell
+is a simple UNIX command interpreter that replicates the basic functionality of the Bourne shell (\fBsh\fR). It reads commands from either standard input or from a file and executes them.
+
+.PP
+In interactive mode, the shell displays a prompt and waits for user input. In non-interactive mode, it reads and executes commands in sequence from a file or a pipe until it reaches the end-of-file (EOF) or encounters the \fBexit\fR command.
+
+.SH USAGE
+.IP \[bu] 2
+When you run the shell without arguments, it will start in interactive mode:
+.nf
+$ ./simple_shell
+($) ls -l
+($) pwd
+($) exit
+.fi
+
+.IP \[bu] 2
+When commands are piped or redirected from a file, it will run in non-interactive mode:
+.nf
+$ echo "ls -l" | ./simple_shell
+$ cat commands.txt | ./simple_shell
+.fi
+
+.SH OPTIONS
+The
+.B simple_shell
+does not currently implement any command-line options in its standard form. However, you may specify a script file as an argument:
+.IP
+.BR simple_shell " <script>"
+.RS
+Reads commands from the script file instead of standard input.
+.RE
+
+.SH BUILT-IN COMMANDS
+.TP 8
+.B exit
+Exit the shell.
+.TP 8
+.B env
+Print the current environment variables.
+
+.PP
+Additional built-ins may be added or customized as per the project requirements.
+
+.SH EXTERNAL COMMANDS
+The shell will search for external commands in the directories specified by the \fBPATH\fR environment variable. If a command is found, it is executed in a separate process using \fBexecve\fR(2). If the command is not found, an error message is displayed.
+
+.SH ENVIRONMENT
+The shell inherits the environment from the parent process. Some environment variables that affect its operation include:
+.TP 8
+.B PATH
+A colon-separated list of directories in which the shell looks for commands.
+.TP 8
+.B HOME
+The default home directory of the current user.
+.TP 8
+.B SHELL
+The pathname of the current shell.
+
+.PP
+The shell allows you to modify, add, or remove environment variables at runtime.
+
+.SH EXIT STATUS
+The exit status of the shell is generally the exit status of the last command executed. If no command is executed, the exit status is 0. Built-in commands that fail will set a non-zero status.
+
+.SH EXAMPLES
+.IP \[bu] 2
+Interactive mode:
+.nf
+$ ./simple_shell
+($) /bin/ls
+main.c  shell.c  simple_shell
+($) exit
+.fi
+
+.IP \[bu] 2
+Non-interactive mode:
+.nf
+$ echo "/bin/ls" | ./simple_shell
+main.c
+shell.c
+simple_shell
+.fi
+
+.SH FILES
+.IP
+.B /bin
+.RS
+Common location of standard UNIX programs.
+.RE
+.IP
+.B /usr/bin
+.RS
+Additional location for system-wide executables.
+.RE
+
+.SH AUTHOR
+Written by:
+.sp
+Giann Pabon and
+Joshua Rivera
+
+.PP
+This project is part of the Holberton School curriculum.
+
+.SH BUGS
+No known bugs at this time. Please report issues on the GitHub repository.
+
+.SH SEE ALSO
+.BR sh (1),
+.BR dash (1),
+.BR bash (1),
+.BR execve (2),
+.BR fork (2),
+.BR environ (7)
+
+.SH COPYRIGHT
+Copyright (C) 2025
+Permission is granted to copy, distribute and/or modify this document under the terms of the MIT License.
