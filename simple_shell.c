@@ -9,27 +9,27 @@
  */
 int main(void)
 {
-    char *line;
-    char **args;
-    int status = 1;
+	char *line;
+	char **args;
+	int status = 1;
 
-    while (status)
-    {
-        write(STDOUT_FILENO, PROMPT, strlen(PROMPT)); /* Display the prompt */
+	while (status)
+	{
+		write(STDOUT_FILENO, PROMPT, strlen(PROMPT)); /* Display the prompt */
 
-        line = read_line(); /* Read input */
-        if (!line)
-            break; /* Handle EOF */
+		line = read_line(); /* Read input */
+		if (!line)
+			break; /* Handle EOF */
 
-        args = parse_line(line); /* Parse the input */
-        if (args[0] != NULL)
-            status = execute_command(args); /* Execute the command */
+		args = parse_line(line); /* Parse the input */
+		if (args[0] != NULL)
+			status = execute_command(args); /* Execute the command */
 
-        free(line);
-        free_array(args);
-    }
+		free(line);
+		free_array(args);
+	}
 
-    return 0;
+	return (0);
 }
 
 /**
@@ -39,27 +39,28 @@ int main(void)
  */
 char *read_line(void)
 {
-    char *line = NULL;
-    size_t bufsize = 0;
+	char *line = NULL;
+	size_t bufsize = 0;
 
-    if (getline(&line, &bufsize, stdin) == -1)
-    {
-        if (feof(stdin))
-        {
-            free(line);
-            return NULL; /* Handle EOF (Ctrl+D) */
-        }
-        perror("getline");
-        free(line);
-        return NULL;
-    }
+	if (getline(&line, &bufsize, stdin) == -1)
+	{
+		if (feof(stdin))
+		{
+			free(line);
+			return (NULL); /* Handle EOF (Ctrl+D) */
+		}
+		perror("getline");
+		free(line);
+		return (NULL);
+	}
 
-    /* Remove trailing newline */
-    size_t len = strlen(line);
-    if (len > 0 && line[len - 1] == '\n')
-        line[len - 1] = '\0';
+	/* Remove trailing newline */
+	size_t len = strlen(line);
 
-    return line;
+	if (len > 0 && line[len - 1] == '\n')
+		line[len - 1] = '\0';
+
+	return (line);
 }
 
 /**
@@ -70,37 +71,37 @@ char *read_line(void)
  */
 char **parse_line(char *line)
 {
-    size_t bufsize = BUFFER_SIZE, position = 0;
-    char **tokens = malloc(bufsize * sizeof(char *));
-    char *token;
+	size_t bufsize = BUFFER_SIZE, position = 0;
+	char **tokens = malloc(bufsize * sizeof(char *));
+	char *token;
 
-    if (!tokens)
-    {
-        fprintf(stderr, "allocation error\n");
-        exit(EXIT_FAILURE);
-    }
+	if (!tokens)
+	{
+		fprintf(stderr, "allocation error\n");
+		exit(EXIT_FAILURE);
+	}
 
-    token = strtok(line, " \t\r\n");
-    while (token != NULL)
-    {
-        tokens[position] = token;
-        position++;
+	token = strtok(line, " \t\r\n");
+	while (token != NULL)
+	{
+		tokens[position] = token;
+		position++;
 
-        if (position >= bufsize)
-        {
-            bufsize += BUFFER_SIZE;
-            tokens = realloc(tokens, bufsize * sizeof(char *));
-            if (!tokens)
-            {
-                fprintf(stderr, "allocation error\n");
-                exit(EXIT_FAILURE);
-            }
-        }
+		if (position >= bufsize)
+		{
+			bufsize += BUFFER_SIZE;
+			tokens = realloc(tokens, bufsize * sizeof(char *));
+			if (!tokens)
+			{
+				fprintf(stderr, "allocation error\n");
+				exit(EXIT_FAILURE);
+			}
+		}
 
-        token = strtok(NULL, " \t\r\n");
-    }
-    tokens[position] = NULL;
-    return tokens;
+		token = strtok(NULL, " \t\r\n");
+	}
+	tokens[position] = NULL;
+	return (tokens);
 }
 
 /**
@@ -111,37 +112,37 @@ char **parse_line(char *line)
  */
 int execute_command(char **args)
 {
-    pid_t pid;
-    int status;
+	pid_t pid;
+	int status;
 
-    if (strcmp(args[0], "exit") == 0)
-        return 0; /* Exit the shell */
+	if (strcmp(args[0], "exit") == 0)
+		return (0); /* Exit the shell */
 
-    pid = fork();
-    if (pid == -1)
-    {
-        perror("fork");
-        return 1;
-    }
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		return (1);
+	}
 
-    if (pid == 0)
-    {
-        /* Child process */
-        if (execve(args[0], args, environ) == -1)
-        {
-            perror(args[0]);
-            exit(EXIT_FAILURE);
-        }
-    }
-    else
-    {
-        /* Parent process */
-        do {
-            waitpid(pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    }
+	if (pid == 0)
+	{
+		/* Child process */
+		if (execve(args[0], args, environ) == -1)
+		{
+			perror(args[0]);
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		/* Parent process */
+		do {
+			waitpid(pid, &status, WUNTRACED);
+		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	}
 
-    return 1;
+	return (1);
 }
 
 /**
@@ -150,6 +151,6 @@ int execute_command(char **args)
  */
 void free_array(char **arr)
 {
-    free(arr);
+	free(arr);
 }
 
