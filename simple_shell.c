@@ -24,7 +24,9 @@ int main(void)
 
 		args = parse_line(line); /* Parse the input */
 		if (args[0] != NULL)
-			execute_command(args); /* Execute the command */
+		{
+			status = execute_command(args); /* Execute the command */
+		}
 
 		free(line);
 		free_array(args);
@@ -108,20 +110,22 @@ char **parse_line(char *line)
 /**
  * execute_command - Executes a command
  * @args: Array of arguments
+ *
+ * Return: 1 to continue, 0 to exit
  */
-void execute_command(char **args)
+int execute_command(char **args)
 {
 	pid_t pid;
 	int status;
 
 	if (strcmp(args[0], "exit") == 0)
-		exit(0); /* Exit the shell */
+		return (0); /* Exit the shell */
 
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork");
-		return;
+		return (1);
 	}
 
 	if (pid == 0)
@@ -140,6 +144,8 @@ void execute_command(char **args)
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}
+
+	return (1);
 }
 
 /**
