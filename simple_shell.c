@@ -1,6 +1,7 @@
 #include "shell.h"
 
 #define PROMPT "$ "
+#define BUFFER_SIZE 1024 /* Define BUFFER_SIZE */
 
 /**
  * main - Entry point of the shell
@@ -23,7 +24,7 @@ int main(void)
 
 		args = parse_line(line); /* Parse the input */
 		if (args[0] != NULL)
-			status = execute_command(args); /* Execute the command */
+			execute_command(args); /* Execute the command */
 
 		free(line);
 		free_array(args);
@@ -40,7 +41,7 @@ int main(void)
 char *read_line(void)
 {
 	char *line = NULL;
-	size_t bufsize = 0;
+	size_t bufsize = 0, len;
 
 	if (getline(&line, &bufsize, stdin) == -1)
 	{
@@ -55,7 +56,7 @@ char *read_line(void)
 	}
 
 	/* Remove trailing newline */
-	size_t len = strlen(line);
+	len = strlen(line);
 
 	if (len > 0 && line[len - 1] == '\n')
 		line[len - 1] = '\0';
@@ -107,22 +108,20 @@ char **parse_line(char *line)
 /**
  * execute_command - Executes a command
  * @args: Array of arguments
- *
- * Return: 1 to continue, 0 to exit
  */
-int execute_command(char **args)
+void execute_command(char **args)
 {
 	pid_t pid;
 	int status;
 
 	if (strcmp(args[0], "exit") == 0)
-		return (0); /* Exit the shell */
+		exit(0); /* Exit the shell */
 
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork");
-		return (1);
+		return;
 	}
 
 	if (pid == 0)
@@ -141,8 +140,6 @@ int execute_command(char **args)
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}
-
-	return (1);
 }
 
 /**
