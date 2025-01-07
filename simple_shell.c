@@ -1,7 +1,9 @@
-#include "shell.h"
+#include "shelle.h"
 
 #define PROMPT "$ "
 #define BUFFER_SIZE 1024 /* Define BUFFER_SIZE */
+
+extern char **environ; /* Declare the external environ variable */
 
 /**
  * main - Entry point of the shell
@@ -16,54 +18,21 @@ int main(void)
 
 	while (status)
 	{
-		write(STDOUT_FILENO, PROMPT, strlen(PROMPT)); 
+		write(STDOUT_FILENO, PROMPT, strlen(PROMPT)); /* Display the prompt */
 
-		line = read_line(); 
+		line = read_line(); /* Read input */
 		if (!line)
-			break;
+			break; /* Handle EOF */
 
-		args = parse_line(line);
+		args = parse_line(line); /* Parse the input */
 		if (args[0] != NULL)
-		{
-			status = execute_command(args);
-		}
+			status = execute_command(args); /* Execute the command */
 
 		free(line);
 		free_array(args);
 	}
 
 	return (0);
-}
-
-/**
- * read_line - Reads a line of input from the user
- *
- * Return: Pointer to the input line, or NULL on EOF
- */
-char *read_line(void)
-{
-	char *line = NULL;
-	size_t bufsize = 0, len;
-
-	if (getline(&line, &bufsize, stdin) == -1)
-	{
-		if (feof(stdin))
-		{
-			free(line);
-			return (NULL);
-		}
-		perror("getline");
-		free(line);
-		return (NULL);
-	}
-
-
-	len = strlen(line);
-
-	if (len > 0 && line[len - 1] == '\n')
-		line[len - 1] = '\0';
-
-	return (line);
 }
 
 /**
@@ -111,7 +80,7 @@ char **parse_line(char *line)
  * execute_command - Executes a command
  * @args: Array of arguments
  *
- * Return: 1 to continue, 0 to exit
+ * Return: 0 on success, -1 on failure, or 1 to continue the shell loop
  */
 int execute_command(char **args)
 {
@@ -119,17 +88,18 @@ int execute_command(char **args)
 	int status;
 
 	if (strcmp(args[0], "exit") == 0)
-		return (0);
+		return (0); /* Exit the shell */
 
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork");
-		return (1);
+		return (-1);
 	}
 
 	if (pid == 0)
 	{
+		/* Child process */
 		if (execve(args[0], args, environ) == -1)
 		{
 			perror(args[0]);
@@ -138,7 +108,7 @@ int execute_command(char **args)
 	}
 	else
 	{
-
+		/* Parent process */
 		do {
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
