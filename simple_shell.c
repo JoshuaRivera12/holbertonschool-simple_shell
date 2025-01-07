@@ -89,10 +89,19 @@ char **parse_line(char *line)
  */
 char *find_command_path(char *command)
 {
-    char *path = getenv("PATH");
+    char *path = NULL;
     char *path_copy, *token, *full_path;
     struct stat st;
+    int i;
 
+    for (i = 0; environ[i]; i++)
+    {
+	    if (strncmp(environ[i], "PATH=", 5) == 0)
+	    {
+		    path = environ[i] + 5;
+		    break;
+	    }
+    }
     if (!path)
         return (NULL);
 
