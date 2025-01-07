@@ -96,6 +96,17 @@ char *find_command_path(char *command)
     if (!path)
         return (NULL);
 
+    /* First check if the command starts with './' */
+    if (command[0] == '.' && command[1] == '/')
+    {
+        if (stat(command, &st) == 0)
+        {
+            return (strdup(command)); /* Return the command as is if it exists */
+        }
+        return (NULL); /* Return NULL if the file doesn't exist */
+    }
+
+    /* Check in the PATH variable */
     path_copy = strdup(path);
     if (!path_copy)
         return (NULL);
