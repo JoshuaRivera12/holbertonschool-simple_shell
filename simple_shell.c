@@ -16,16 +16,16 @@ int main(void)
 
 	while (status)
 	{
-		write(STDOUT_FILENO, PROMPT, strlen(PROMPT)); /* Display the prompt */
+		write(STDOUT_FILENO, PROMPT, strlen(PROMPT)); 
 
-		line = read_line(); /* Read input */
+		line = read_line(); 
 		if (!line)
-			break; /* Handle EOF */
+			break;
 
-		args = parse_line(line); /* Parse the input */
+		args = parse_line(line);
 		if (args[0] != NULL)
 		{
-			status = execute_command(args); /* Execute the command */
+			status = execute_command(args);
 		}
 
 		free(line);
@@ -50,14 +50,14 @@ char *read_line(void)
 		if (feof(stdin))
 		{
 			free(line);
-			return (NULL); /* Handle EOF (Ctrl+D) */
+			return (NULL);
 		}
 		perror("getline");
 		free(line);
 		return (NULL);
 	}
 
-	/* Remove trailing newline */
+
 	len = strlen(line);
 
 	if (len > 0 && line[len - 1] == '\n')
@@ -119,7 +119,7 @@ int execute_command(char **args)
 	int status;
 
 	if (strcmp(args[0], "exit") == 0)
-		return (0); /* Exit the shell */
+		return (0);
 
 	pid = fork();
 	if (pid == -1)
@@ -130,7 +130,6 @@ int execute_command(char **args)
 
 	if (pid == 0)
 	{
-		/* Child process */
 		if (execve(args[0], args, environ) == -1)
 		{
 			perror(args[0]);
@@ -139,7 +138,7 @@ int execute_command(char **args)
 	}
 	else
 	{
-		/* Parent process */
+
 		do {
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
