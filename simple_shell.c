@@ -1,6 +1,6 @@
 #include "shelle.h"
 
-#define PROMPT "$ "
+#define PROMPT "$_SHELL "
 #define BUFFER_SIZE 1024 /* Define BUFFER_SIZE */
 
 extern char **environ; /* Declare the external environ variable */
