@@ -8,13 +8,15 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 
-char *get_env(char **environ, const char *name);
-char *find_command(char **environ, char *command);
-void execute_command(char **environ, char **args, int *last_status);
-void print_env(char **environ);
-int handle_builtin(char **args, char **environ, int *last_status);
-void tokenize_input(char *line, char **args);
-char *resolve_path(char **environ, char *command, int *last_status);
+/* Function prototypes */
+char *fetch_env_var(char **env_vars, const char *var_name);
+char *locate_command(char **env_vars, char *cmd);
+void run_program(char **env_vars, char **arguments, int *status_code);
+void display_environment(char **env_vars);
+int manage_builtin(char **arguments, char **env_vars, int *status_code);
+void split_input(char *input, char **args);
+char *fetch_command_path(char **env_vars, char *cmd, int *status_code);
+void release_memory(char **array);
 
 #endif
 

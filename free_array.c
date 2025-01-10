@@ -1,12 +1,20 @@
 #include "shell.h"
 
 /**
- * free_array - Frees a dynamically allocated array of strings.
- * @arr: The array to free.
+ * release_memory - Frees a dynamically allocated array of strings.
+ * @array: The array to free.
+ * Return: Void.
  */
 
-void free_array(char **arr)
+void release_memory(char **array)
 {
-free(arr);
+	int index = 0;
+	
+	while (array[index])
+	{
+		free(array[index]);
+		index++;
+	}
+	free(array);
 }
 

@@ -1,39 +1,39 @@
 #include "shell.h"
 
 /**
- * find_command - Searches for a command in the PATH.
- * @environ: Array of environment variables.
- * @command: Command to search for.
- * Return: Full path to the command or NULL if not found.
+ * locate_command - Finds a command in the PATH directories.
+ * @env_vars: Array of environment variables.
+ * @cmd: The command to search for.
+ * Return: Full path of the command, or NULL if not found.
  */
 
-char *find_command(char **environ, char *command)
+char *locate_command(char **env_vars, char *cmd)
 {
-	char *path = get_env(environ, "PATH"), *dir, *full_path;
-	size_t len;
+	char *path_var = fetch_env_var(env_vars, "PATH"), *directory, *complete_path;
+	size_t path_len;
 
-	if (!path || *path == '\0')
+	if (!path_var || *path_var == '\0')
 		return (NULL);
 
-	path = strdup(path);
-	dir = strtok(path, ":");
-	while (dir)
+	path_var = strdup(path_var);
+	directory = strtok(path_var, ":");
+	while (directory)
 	{
-		len = strlen(dir) + strlen(command) + 2;
-		full_path = malloc(len);
-		if (!full_path)
+		path_len = strlen(directory) + strlen(cmd) + 2;
+		complete_path = malloc(path_len);
+		if (!complete_path)
 			break;
 
-		sprintf(full_path, "%s/%s", dir, command);
-		if (access(full_path, X_OK) == 0)
+		sprintf(complete_path, "%s/%s", directory, cmd);
+		if (access(complete_path, X_OK) == 0)
 		{
-			free(path);
-			return (full_path);
+			free(path_var);
+			return (complete_path);
 		}
-		free(full_path);
-		dir = strtok(NULL, ":");
+		free(complete_path);
+		directory = strtok(NULL, ":");
 	}
-	free(path);
+	free(path_var);
 	return (NULL);
 }
 

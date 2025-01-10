@@ -2,45 +2,46 @@
 #include <errno.h>
 
 /**
- * execute_command - Executes a command with arguments.
- * @environ: Array of environment variables.
- * @args: Tokenized arguments.
- * @last_status: Pointer to the last status variable.
+ * run_program - Executes a command with arguments.
+ * @env_vars: Array of environment variables.
+ * @arguments: Tokenized command-line arguments.
+ * @status_code: Pointer to the status of the last executed command.
  * Return: Void.
  */
 
-void execute_command(char **environ, char **args, int *last_status)
+void run_program(char **env_vars, char **arguments, int *status_code)
 {
-	pid_t pid;
-	int status;
-	char *full_path = resolve_path(environ, args[0], last_status);
+	pid_t process_id;
+	int exit_status;
+	char *resolved_path = fetch_command_path(env_vars, arguments[0], status_code);
 
-	if (!full_path)
+	if (!resolved_path)
 	{
-		fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
-		*last_status = 127;
+		fprintf(stderr, "./hsh: 1: %s: not found\n", arguments[0]);
+		*status_code = 127;
 		return;
 	}
 
-	pid = fork();
-	if (pid == 0)
+	process_id = fork();
+	if (process_id == 0)
 	{
-		execve(full_path, args, environ);
-		perror("Error");
-		if (full_path != args[0])
-			free(full_path);
-		exit(1);
+		execve(resolved_path, arguments, env_vars);
+		perror("Execution Error");
+		if (resolved_path != arguments[0])
+			free(resolved_path);
+		exit(EXIT_FAILURE);
 	}
-	else if (pid > 0)
+	else if (process_id > 0)
 	{
-		waitpid(pid, &status, 0);
-		*last_status = WEXITSTATUS(status);
+		waitpid(process_id, &exit_status, 0);
+		*status_code = WEXITSTATUS(exit_status);
 	}
 	else
 	{
-		perror("Fork failed");
-		*last_status = 1;
+		perror("Forking Failed");
+		*status_code = 1;
 	}
-	if (full_path != args[0])
-		free(full_path);
+	if (resolved_path != arguments[0])
+		free(resolved_path);
 }
+
