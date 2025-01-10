@@ -12,30 +12,32 @@
 
 int handle_builtin(char **args)
 {
-	/* If no command was typed, do nothing */
 	if (!args[0])
 		return (-1);
 
-	/* 1) Exit built-in */
 	if (strcmp(args[0], "exit") == 0)
 	{
-		/* Return 0 => main loop stops => shell exits */
-		return (0);
-	}
+		int exit_code = 0;
 
-	/* 2) env built-in */
+		if (args[1])
+		{
+			char *endptr;
+
+			exit_code = strtol(args[1], &endptr, 10);
+			if (*endptr != '\0')
+			{
+				fprintf(stderr, "exit: numeric argument required\n");
+				exit_code = 2;
+			}
+		}
+		free_array(args);
+		exit(exit_code);
+	}
 	if (strcmp(args[0], "env") == 0)
 	{
-		/* Print environment variables */
-		int i;
-
-		for (i = 0; environ[i] != NULL; i++)
+		for (int i = 0; environ[i] != NULL; i++)
 			puts(environ[i]);
-
-		/* Return 1 => keep shell running after printing */
 		return (1);
 	}
-
-	/* Not a builtin */
 	return (-1);
 }
