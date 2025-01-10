@@ -13,31 +13,31 @@ extern char **environ; /* Declare the external environ variable */
  */
 int main(void)
 {
-    char *line;
-    char **args;
-    int status = 1;
+	char *line;
+	char **args;
+	int status = 1;
 
-    while (status)
-    {
-        /* Display the prompt only if running interactively */
-        if (isatty(STDIN_FILENO))
-        {
-            write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
-        }
+	while (status)
+	{
+		/* Display the prompt only if running interactively */
+		if (isatty(STDIN_FILENO))
+		{
+			write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
+		}
 
-        line = read_line(); /* Read input */
-        if (!line)
-            break; /* Handle EOF */
+		line = read_line(); /* Read input */
+		if (!line)
+			break; /* Handle EOF */
 
-        args = parse_line(line); /* Parse the input */
-        if (args[0] != NULL)
-            status = execute_command(args); /* Execute the command */
+		args = parse_line(line); /* Parse the input */
+		if (args[0] != NULL)
+			status = execute_command(args); /* Execute the command */
 
-        free(line);
-        free_array(args);
-    }
+		free(line);
+		free_array(args);
+	}
 
-    return (0);
+	return (0);
 }
 
 /**
@@ -48,37 +48,37 @@ int main(void)
  */
 char **parse_line(char *line)
 {
-    size_t bufsize = BUFFER_SIZE, position = 0;
-    char **tokens = malloc(bufsize * sizeof(char *));
-    char *token;
+	size_t bufsize = BUFFER_SIZE, position = 0;
+	char **tokens = malloc(bufsize * sizeof(char *));
+	char *token;
 
-    if (!tokens)
-    {
-        fprintf(stderr, "allocation error\n");
-        exit(EXIT_FAILURE);
-    }
+	if (!tokens)
+	{
+		fprintf(stderr, "allocation error\n");
+		exit(EXIT_FAILURE);
+	}
 
-    token = strtok(line, " \t\r\n");
-    while (token != NULL)
-    {
-        tokens[position] = token;
-        position++;
+	token = strtok(line, " \t\r\n");
+	while (token != NULL)
+	{
+		tokens[position] = token;
+		position++;
 
-        if (position >= bufsize)
-        {
-            bufsize += BUFFER_SIZE;
-            tokens = realloc(tokens, bufsize * sizeof(char *));
-            if (!tokens)
-            {
-                fprintf(stderr, "allocation error\n");
-                exit(EXIT_FAILURE);
-            }
-        }
+		if (position >= bufsize)
+		{
+			bufsize += BUFFER_SIZE;
+			tokens = realloc(tokens, bufsize * sizeof(char *));
+			if (!tokens)
+			{
+				fprintf(stderr, "allocation error\n");
+				exit(EXIT_FAILURE);
+			}
+		}
 
-        token = strtok(NULL, " \t\r\n");
-    }
-    tokens[position] = NULL;
-    return (tokens);
+		token = strtok(NULL, " \t\r\n");
+	}
+	tokens[position] = NULL;
+	return (tokens);
 }
 
 /**
@@ -89,63 +89,63 @@ char **parse_line(char *line)
  */
 char *find_command_path(char *command)
 {
-    char *path = NULL;
-    char *path_copy, *token, *full_path;
-    struct stat st;
-    int i;
+	char *path = NULL;
+	char *path_copy, *token, *full_path;
+	struct stat st;
+	int i;
 
-    for (i = 0; environ[i]; i++)
-    {
-	    if (strncmp(environ[i], "PATH=", 5) == 0)
-	    {
-		    path = environ[i] + 5;
-		    break;
-	    }
-    }
-    if (!path)
-        return (NULL);
+	for (i = 0; environ[i]; i++)
+	{
+		if (strncmp(environ[i], "PATH=", 5) == 0)
+		{
+			path = environ[i] + 5;
+			break;
+		}
+	}
+	if (!path)
+		return (NULL);
 
-    /* First check if the command starts with './' */
-    if (command[0] == '.' && command[1] == '/')
-    {
-        if (stat(command, &st) == 0)
-        {
-            return (strdup(command)); /* Return the command as is if it exists */
-        }
-        return (NULL); /* Return NULL if the file doesn't exist */
-    }
+	/* First check if the command starts with './' */
+	if (command[0] == '.' && command[1] == '/')
+	{
+		if (stat(command, &st) == 0)
+		{
+			return (strdup(command)); /* Return the command as is if it exists */
+		}
+		return (NULL); /* Return NULL if the file doesn't exist */
+	}
 
-    /* Check in the PATH variable */
-    path_copy = strdup(path);
-    if (!path_copy)
-        return (NULL);
+	/* Check in the PATH variable */
+	path_copy = strdup(path);
+	if (!path_copy)
+		return (NULL);
 
-    token = strtok(path_copy, ":");
-    while (token != NULL)
-    {
-        full_path = malloc(strlen(token) + strlen(command) + 2);
-        if (!full_path)
-        {
-            free(path_copy);
-            return (NULL);
-        }
+	token = strtok(path_copy, ":");
+	while (token != NULL)
+	{
+		full_path = malloc(strlen(token) + strlen(command) + 2);
+		if (!full_path)
+		{
+			free(path_copy);
+			return (NULL);
+		}
 
-        strcpy(full_path, token);
-        strcat(full_path, "/");
-        strcat(full_path, command);
+		strcpy(full_path, token);
+		strcat(full_path, "/");
+		strcat(full_path, command);
 
-        if (stat(full_path, &st) == 0)
-        {
-            free(path_copy);
-            return (full_path);
-        }
+		if (stat(full_path, &st) == 0)
+		{
+			free(path_copy);
+			return (full_path);
+		}
 
-        free(full_path);
-        token = strtok(NULL, ":");
-    }
+		free(full_path);
+		token = strtok(NULL, ":");
+	}
 
-    free(path_copy);
-    return (NULL);
+	free(path_copy);
+	return (NULL);
 }
 
 /**
@@ -154,60 +154,71 @@ char *find_command_path(char *command)
  *
  * Return: 0 on success, -1 on failure, or 1 to continue the shell loop
  */
+
 int execute_command(char **args)
 {
-    pid_t pid;
-    int status;
-    char *command_path;
+	pid_t pid;
+	int status;
+	int builtin_result;
+	char *command_path;
 
-    if (strcmp(args[0], "exit") == 0)
-        return (0); /* Exit the shell */
+	/* Step 1: Check built-ins (exit, env, etc.) */
+	builtin_result = handle_builtin(args);
+	if (builtin_result != -1)
+	{
+		/* If handle_builtin returns 0 => exit the shell */
+		/* If it returns 1 => done handling builtin, keep running */
+		return (builtin_result);
+	}
 
-    /* Find the command in the PATH if it's not an absolute path */
-    command_path = args[0];
-    if (args[0][0] != '/')
-    {
-        command_path = find_command_path(args[0]);
-        if (!command_path)
-        {
-            fprintf(stderr, "%s: command not found\n", args[0]);
-            return (1);
-        }
-    }
+	/* Step 2: Not a builtin => find command in PATH (if not an absolute or "./" path) */
+	if (args[0][0] != '/' && !(args[0][0] == '.' && args[0][1] == '/'))
+	{
+		command_path = find_command_path(args[0]);
+		if (!command_path)
+		{
+			fprintf(stderr, "%s: command not found\n", args[0]);
+			return (1);
+		}
+	}
+	else
+	{
+		command_path = args[0];
+	}
 
-    pid = fork();
-    if (pid == -1)
-    {
-        perror("fork");
-        if (command_path != args[0])
-            free(command_path);
-        return (-1);
-    }
+	/* Step 3: Fork a child process to run the external command */
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		if (command_path != args[0])
+			free(command_path);
+		return (1);
+	}
 
-    if (pid == 0)
-    {
-        /* Child process */
-        if (execve(command_path, args, environ) == -1)
-        {
-            perror(args[0]);
-            if (command_path != args[0])
-                free(command_path);
-            exit(EXIT_FAILURE);
-        }
-    }
-    else
-    {
-        /* Parent process */
-        do {
-            waitpid(pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    }
+	if (pid == 0)
+	{
+		if (execve(command_path, args, environ) == -1)
+		{
+			perror(args[0]);
+			if (command_path != args[0])
+				free(command_path);
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		do {
+			waitpid(pid, &status, WUNTRACED);
+		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	}
 
-    if (command_path != args[0])
-        free(command_path);
+	if (command_path != args[0])
+		free(command_path);
 
-    return (1);
+	return (1);
 }
+
 
 /**
  * free_array - Frees a dynamically allocated array of strings
@@ -215,6 +226,6 @@ int execute_command(char **args)
  */
 void free_array(char **arr)
 {
-    free(arr);
+	free(arr);
 }
 
