@@ -7,8 +7,9 @@
  * Return: Pointer to the resolved full path or NULL if not found.
  */
 
-char *fetch_command_path(char **env_vars, char *cmd)
+char *fetch_command_path(char **env_vars, char *cmd, int *status_code)
 {
+	(void)status_code;
 
 	if (strchr(cmd, '/'))
 	{
