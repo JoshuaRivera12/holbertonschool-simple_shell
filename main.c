@@ -41,6 +41,7 @@ int main(int argc, char **argv, char **env_vars)
 				continue;
 			run_program(env_vars, parsed_args, &exit_status);
 		}
+		release_memory(parsed_args);
 	}
 	free(input_line);
 	return (exit_status);

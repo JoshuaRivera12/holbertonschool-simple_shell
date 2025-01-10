@@ -11,6 +11,7 @@
 int manage_builtin(char **arguments, char **env_vars, int *status_code)
 {
 	if (strcmp(arguments[0], "exit") == 0)
+		release_memory(arguments);
 		exit(*status_code);
 
 	if (strcmp(arguments[0], "env") == 0)
