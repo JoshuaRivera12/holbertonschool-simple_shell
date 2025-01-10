@@ -53,7 +53,7 @@ int execute_command(char **args)
 	if (builtin_result != -1)
 		return (builtin_result);
 
-	/* Check if command is absolute or starts with '.' (covers "./", "../", etc.) */
+	/* Check if command is absolute or starts with '.' */
 
 	if (args[0][0] == '/' || args[0][0] == '.')
 	{
