@@ -35,7 +35,9 @@ int handle_builtin(char **args)
 	}
 	if (strcmp(args[0], "env") == 0)
 	{
-		for (int i = 0; environ[i] != NULL; i++)
+		int i;
+
+		for (i = 0; environ[i] != NULL; i++)
 			puts(environ[i]);
 		return (1);
 	}
