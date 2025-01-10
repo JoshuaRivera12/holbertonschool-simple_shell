@@ -53,7 +53,13 @@ int execute_command(char **args)
 	if (builtin_result != -1)
 		return (builtin_result);
 
-	if (args[0][0] != '/' && !(args[0][0] == '.' && args[0][1] == '/'))
+	/* Check if command is absolute or starts with '.' (covers "./", "../", etc.) */
+
+	if (args[0][0] == '/' || args[0][0] == '.')
+	{
+		command_path = args[0];
+	}
+	else
 	{
 		command_path = find_command_path(args[0]);
 		if (!command_path)
@@ -62,13 +68,3 @@ int execute_command(char **args)
 			return (1);
 		}
 	}
-	else
-	{
-		command_path = args[0];
-	}
-	ret_val = run_command(command_path, args);
-	if (command_path != args[0])
-		free(command_path);
-
-	return (ret_val);
-}
