@@ -1,26 +1,20 @@
-#ifndef SHELLE_H
-#define SHELLE_H
+#ifndef SHELL_H
+#define SHELL_H
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
 #include <unistd.h>
-#include <sys/types.h>
+#include <string.h>
 #include <sys/wait.h>
-#include <errno.h>
-#include <sys/stat.h>
+#include <sys/types.h>
 
-#define BUFFER_SIZE 1024
+char *get_env(char **environ, const char *name);
+char *find_command(char **environ, char *command);
+void execute_command(char **environ, char **args, int *last_status);
+void print_env(char **environ);
+int handle_builtin(char **args, char **environ, int *last_status);
+void tokenize_input(char *line, char **args);
+char *resolve_path(char **environ, char *command, int *last_status);
 
-/* Global environment variable for the 'env' built-in */
-extern char **environ;
+#endif
 
-/* Function prototypes */
-char *read_line(void);
-char **parse_line(char *line);
-char *find_command_path(char *command);
-int execute_command(char **args, char *shell_name, int cmd_count);
-int handle_builtin(char **args);
-void free_array(char **arr);
-
-#endif /* SHELLE_H */

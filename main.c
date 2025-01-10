@@ -1,44 +1,49 @@
 #include "shell.h"
 
-#define PROMPT "$_SHELL "
-
 /**
- * main - Entry point of the simple shell
- * @argc: Unused argument count
- * @argv: Argument vector (argv[0] is shell name)
- *
- * Return: 0 on success
+ * main - Entry point for the simple shell program.
+ * @argc: Argument count (unused).
+ * @argv: Argument vector (unused).
+ * @environ: Array of environment variables.
+ * Return: 0 on successful execution or the last command status.
  */
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **environ)
 {
-	char *line;
-	char **args;
-	int status = 1;
-	char *shell_name;
-	int cmd_count = 0;
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t nread;
+	char *args[10];
+	int last_status = 0;
+	int is_interactive = isatty(STDIN_FILENO);
 
-	(void)argc; /* if unused, silence warnings */
-	shell_name = argv[0]; /* e.g. "./hsh" */
+	(void)argc;
+	(void)argv;
 
-	while (status)
+	while (1)
 	{
-		cmd_count++;
+		if (is_interactive)
+			write(STDOUT_FILENO, "$ ", 2);
 
-		if (isatty(STDIN_FILENO))
-			write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
-
-		line = read_line();
-		if (!line)
+		nread = getline(&line, &len, stdin);
+		if (nread == -1)
+		{
+			if (is_interactive)
+				write(STDOUT_FILENO, "Exiting shell...\n", 17);
 			break;
+		}
+		if (nread > 0)
+			line[nread - 1] = '\0';
 
-		args = parse_line(line);
-		if (args[0])
-			status = execute_command(args, shell_name, cmd_count);
-
-		free(line);
-		free_array(args);
+		tokenize_input(line, args);
+		if (args[0] != NULL)
+		{
+			if (handle_builtin(args, environ, &last_status))
+				continue;
+			execute_command(environ, args, &last_status);
+		}
 	}
-	return (status);
+	free(line);
+	return (last_status);
 }
 
