@@ -9,7 +9,7 @@
 void release_memory(char **array)
 {
 	int index = 0;
-	
+
 	while (array[index])
 	{
 		free(array[index]);
@@ -17,4 +17,3 @@ void release_memory(char **array)
 	}
 	free(array);
 }
-
