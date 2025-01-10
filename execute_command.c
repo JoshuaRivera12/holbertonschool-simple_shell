@@ -51,10 +51,12 @@ static int run_command(const char *path, char **args)
 /**
  * execute_command - Executes a command or checks built-ins first.
  * @args: Array of argument strings.
+ * @shell_name: The name of the shell (e.g. "./hsh")
+ * @cmd_count: A running count of how many commands have been entered
  *
  * Return: 0 if the shell should exit, 1 otherwise (continue).
  */
-int execute_command(char **args)
+int execute_command(char **args, char *shell_name, int cmd_count)
 {
 	int builtin_result;
 	char *command_path;
@@ -89,4 +91,3 @@ int execute_command(char **args)
 	/* Return the child's result to indicate continuing (or 0 to exit if wanted)*/
 	return (ret_val);
 }
-

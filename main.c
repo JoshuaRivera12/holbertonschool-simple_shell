@@ -1,9 +1,5 @@
 #include "shell.h"
 
-/* Global variables to store shell name & command count */
-char *shell_name = NULL;
-int cmd_count = 0;
-
 #define PROMPT "$_SHELL "
 
 /**
@@ -19,6 +15,8 @@ int main(int argc, char **argv)
 	char *line;
 	char **args;
 	int status = 1;
+	char *shell_name;
+	int cmd_count = 0;
 
 	(void)argc; /* if unused, silence warnings */
 	shell_name = argv[0]; /* e.g. "./hsh" */
@@ -36,7 +34,7 @@ int main(int argc, char **argv)
 
 		args = parse_line(line);
 		if (args[0])
-			status = execute_command(args);
+			status = execute_command(args, shell_name, cmd_count);
 
 		free(line);
 		free_array(args);

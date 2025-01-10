@@ -14,14 +14,12 @@
 
 /* Global environment variable for the 'env' built-in */
 extern char **environ;
-extern char *shell_name;
-extern int cmd_count;
 
 /* Function prototypes */
 char *read_line(void);
 char **parse_line(char *line);
 char *find_command_path(char *command);
-int execute_command(char **args);
+int execute_command(char **args, char *shell_name, int cmd_count);
 int handle_builtin(char **args);
 void free_array(char **arr);
 
