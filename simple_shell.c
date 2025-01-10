@@ -1,4 +1,4 @@
-#include "shelle.h"
+#include "shell.h"
 #include <sys/stat.h> /* For struct stat and stat function */
 
 #define PROMPT "$_SHELL "
