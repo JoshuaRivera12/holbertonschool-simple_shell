@@ -28,7 +28,7 @@ int handle_builtin(char **args)
 	{
 		/* Print environment variables */
 		int i;
-		for ( environ[i] != NULL; i++)
+		for (i = 0; environ[i] != NULL; i++)
 			puts(environ[i]);
 
 		/* Return 1 => keep shell running after printing */
