@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <errno.h>
 
 /**
  * run_command - Forks and executes the command via execve.
@@ -22,8 +23,19 @@ static int run_command(const char *path, char **args)
 	{
 		if (execve(path, args, environ) == -1)
 		{
-			perror(args[0]);
-			exit(EXIT_FAILURE);
+			if (errno == ENOENT)
+			{
+				/* Matches the format: ./hsh: 1: ../../hbtn_ls: not found */
+				fprintf(stderr, "%s: %d: %s: not found\n",
+						shell_name, cmd_count, args[0]);
+				exit(127);
+			}
+			else
+			{
+				/* Another error, e.g. EACCES => permission denied */
+				perror(args[0]);
+				exit(126);
+			}
 		}
 	}
 	else
@@ -73,7 +85,7 @@ int execute_command(char **args)
 	if (command_path != args[0])
 		free(command_path);
 
-	/* Return the child's result to indicate continuing (or 0 to exit if desired) */
+	/* Return the child's result to indicate continuing (or 0 to exit if wanted)*/
 	return (ret_val);
 }
 

@@ -14,6 +14,8 @@
 
 /* Global environment variable for the 'env' built-in */
 extern char **environ;
+extern char *shell_name;
+extern int cmd_count;
 
 /* Function prototypes */
 char *read_line(void);
