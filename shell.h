@@ -1,23 +1,26 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef SHELLE_H
+#define SHELLE_H
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <errno.h>
 #include <sys/stat.h>
+
+#define BUFFER_SIZE 1024
 
 /* Global environment variable for the 'env' built-in */
 extern char **environ;
 
+/* Function prototypes */
+char *read_line(void);
+char **parse_line(char *line);
+char *find_command_in_path(char *command);
+int execute_command(char **args);
+int handle_builtin(char **args);
+void free_array(char **arr);
 
-char *read_line(void);                /* read_line.c */
-char **parse_line(char *line);       /* parse_line.c */
-char *find_command_in_path(char *command); /* path.c */
-void execute_command(char **args);         /* execute.c */
-int handle_builtin(char **args);           /* builtin.c */
-void free_array(char **arr);      /* for freeing arrays */
-
-#endif
+#endif /* SHELLE_H */
