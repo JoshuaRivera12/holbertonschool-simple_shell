@@ -1,5 +1,13 @@
 #include "shell.h"
 
+/**
+ * parse_line - Splits a line into arguments using strtok.
+ * @line: The input line.
+ *
+ * Return: Array of arguments (NULL-terminated),
+ *         or NULL if allocation fails.
+ */
+
 #define BUFFER_SIZE 1024
 
 char **parse_line(char *line)
