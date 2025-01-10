@@ -1,4 +1,4 @@
-#include "shelle.h"
+#include "shell.h"
 
 /**
  * handle_builtin - checks and executes builtin commands (exit, env, etc.)

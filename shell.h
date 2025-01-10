@@ -18,7 +18,7 @@ extern char **environ;
 /* Function prototypes */
 char *read_line(void);
 char **parse_line(char *line);
-char *find_command_in_path(char *command);
+char *find_command_path(char *command);
 int execute_command(char **args);
 int handle_builtin(char **args);
 void free_array(char **arr);
