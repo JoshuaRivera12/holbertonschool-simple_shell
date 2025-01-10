@@ -37,10 +37,10 @@ static int run_command(const char *path, char **args)
 }
 
 /**
- * execute_command - Executes a command or handles built-ins.
+ * execute_command - Executes a command or checks built-ins first.
  * @args: Array of argument strings.
  *
- * Return: 0 if shell should exit, 1 otherwise (to continue).
+ * Return: 0 if the shell should exit, 1 otherwise (continue).
  */
 
 int execute_command(char **args)
@@ -50,21 +50,5 @@ int execute_command(char **args)
 	int ret_val;
 
 	builtin_result = handle_builtin(args);
-	if (builtin_result != -1)
-		return (builtin_result);
+	if (builtin_result != -
 
-	/* Check if command is absolute or starts with '.' */
-
-	if (args[0][0] == '/' || args[0][0] == '.')
-	{
-		command_path = args[0];
-	}
-	else
-	{
-		command_path = find_command_path(args[0]);
-		if (!command_path)
-		{
-			fprintf(stderr, "%s: command not found\n", args[0]);
-			return (1);
-		}
-	}
