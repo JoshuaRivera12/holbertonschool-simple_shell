@@ -11,11 +11,13 @@ void release_memory(char **array)
 {
 	int i = 0;
 
+	if (array == NULL)
+		return;
+
 	while (array[i])
 	{
-		free(array[i]);
+		free(array[i]); /* Only valid for dynamically allocated strings */
 		i++;
 	}
-	free(array);
+	free(array); /* Free the array itself if it was dynamically allocated */
 }
-
