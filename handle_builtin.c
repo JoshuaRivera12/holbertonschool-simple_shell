@@ -27,7 +27,8 @@ int handle_builtin(char **args)
 	if (strcmp(args[0], "env") == 0)
 	{
 		/* Print environment variables */
-		for (int i = 0; environ[i] != NULL; i++)
+		int i;
+		for ( environ[i] != NULL; i++)
 			puts(environ[i]);
 
 		/* Return 1 => keep shell running after printing */
