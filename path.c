@@ -24,7 +24,7 @@ char *locate_command(char **env_vars, char *cmd)
 		if (!complete_path)
 			break;
 
-		sprintf(complete_path, "%s/%s", directory, cmd);
+		snprintf(complete_path, path_len, "%s/%s", directory, cmd);
 		if (access(complete_path, X_OK) == 0)
 		{
 			free(path_var);
