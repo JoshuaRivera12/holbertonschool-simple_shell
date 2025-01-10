@@ -1,11 +1,6 @@
 #include "shell.h"
 
 /**
- * File: main.c
- * Description: Contains the main function for the simple shell.
- */
-
-/**
  * main - Entry point of the simple shell
  * Return: 0 on success
  */
