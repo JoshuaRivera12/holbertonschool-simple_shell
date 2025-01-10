@@ -41,6 +41,6 @@ int main(int argc, char **argv)
 		free(line);
 		free_array(args);
 	}
-	return (0);
+	return (status);
 }
 

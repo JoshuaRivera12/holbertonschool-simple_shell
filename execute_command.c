@@ -11,7 +11,7 @@
 static int run_command(const char *path, char **args)
 {
 	pid_t pid;
-	int status;
+	int status, ret_code;
 
 	pid = fork();
 	if (pid == -1)
@@ -23,19 +23,8 @@ static int run_command(const char *path, char **args)
 	{
 		if (execve(path, args, environ) == -1)
 		{
-			if (errno == ENOENT)
-			{
-				/* Matches the format: ./hsh: 1: ../../hbtn_ls: not found */
-				fprintf(stderr, "%s: %d: %s: not found\n",
-						shell_name, cmd_count, args[0]);
-				exit(127);
-			}
-			else
-			{
-				/* Another error, e.g. EACCES => permission denied */
-				perror(args[0]);
-				exit(126);
-			}
+			perror(args[0]);
+			exit(EXIT_FAILURE);
 		}
 	}
 	else
@@ -43,8 +32,20 @@ static int run_command(const char *path, char **args)
 		do {
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+
+		/* If the child exited normally, WIFEXITED == 1, we can grab WEXITSTATUS. */
+		if (WIFEXITED(status))
+		{
+			ret_code = WEXITSTATUS(status);
+			/* ret_code will be 2 if ls returned 2, for example. */
+		}
+		else
+		{
+			/* If it was signaled or something else, pick a fallback. */
+			ret_code = 2;
+		}
 	}
-	return (1);
+	return (ret_code);
 }
 
 /**
