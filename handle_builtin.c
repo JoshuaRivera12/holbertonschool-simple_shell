@@ -28,6 +28,7 @@ int handle_builtin(char **args)
 	{
 		/* Print environment variables */
 		int i;
+
 		for (i = 0; environ[i] != NULL; i++)
 			puts(environ[i]);
 
