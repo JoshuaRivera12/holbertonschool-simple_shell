@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#define BUFFER_SIZE 1024
 /**
  * parse_line - Splits a line into arguments using strtok.
  * @line: The input line.
@@ -8,7 +8,6 @@
  *         or NULL if allocation fails.
  */
 
-#define BUFFER_SIZE 1024
 
 char **parse_line(char *line)
 {
