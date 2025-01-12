@@ -53,30 +53,6 @@ Exit the shell.
 .B env
 Print the current environment variables.
 
-.PP
-Additional built-ins may be added or customized as per the project requirements.
-
-.SH EXTERNAL COMMANDS
-The shell will search for external commands in the directories specified by the \fBPATH\fR environment variable. If a command is found, it is executed in a separate process using \fBexecve\fR(2). If the command is not found, an error message is displayed.
-
-.SH ENVIRONMENT
-The shell inherits the environment from the parent process. Some environment variables that affect its operation include:
-.TP 8
-.B PATH
-A colon-separated list of directories in which the shell looks for commands.
-.TP 8
-.B HOME
-The default home directory of the current user.
-.TP 8
-.B SHELL
-The pathname of the current shell.
-
-.PP
-The shell allows you to modify, add, or remove environment variables at runtime.
-
-.SH EXIT STATUS
-The exit status of the shell is generally the exit status of the last command executed. If no command is executed, the exit status is 0. Built-in commands that fail will set a non-zero status.
-
 .SH EXAMPLES
 .IP \[bu] 2
 Interactive mode:
@@ -98,14 +74,13 @@ simple_shell
 
 .SH FILES
 .IP
-.B /bin
+.B /holbertonschool-simple_shell
 .RS
-Common location of standard UNIX programs.
-.RE
-.IP
-.B /usr/bin
-.RS
-Additional location for system-wide executables.
+Contains source files, including:
+- shell.c
+- env_utils.c
+- io_utils.c
+- path_utils.c
 .RE
 
 .SH AUTHOR
@@ -119,14 +94,6 @@ This project is part of the Holberton School curriculum.
 
 .SH BUGS
 No known bugs at this time. Please report issues on the GitHub repository.
-
-.SH SEE ALSO
-.BR sh (1),
-.BR dash (1),
-.BR bash (1),
-.BR execve (2),
-.BR fork (2),
-.BR environ (7)
 
 .SH COPYRIGHT
 Copyright (C) 2025
