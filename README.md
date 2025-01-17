@@ -102,4 +102,4 @@ Please note that the output should resemble the behavior of the `ls -l` command 
 
 ## Authors
 Giann Pabon [Github](https://github.com/GiannPabon) | [linkedin](https://www.linkedin.com/in/giannpabon/) <br />
-Joshua Rivera [Github](https://github.com/JoshuaRivera12) | .[Linkedin](https:www.linkedin.com/in/joshuarivera/) <br />
+Joshua Rivera [Github](https://github.com/JoshuaRivera12) | [Linkedin](https://www.linkedin.com/in/joshua-rivera-85a5b0347/) <br />
